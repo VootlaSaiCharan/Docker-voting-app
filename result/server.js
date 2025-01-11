@@ -9,7 +9,7 @@ var express = require('express'),
     server = require('http').Server(app),
     io = require('socket.io')(server, {
       transports: ['polling'] // Specify transports option here
-    });
+    })
 
 // io.set('transports', ['polling']);
 
@@ -25,7 +25,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 var pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@localhost/postgres'
+  connectionString: 'postgres://postgres:postgres@db/postgres'
 });
 
 async.retry(

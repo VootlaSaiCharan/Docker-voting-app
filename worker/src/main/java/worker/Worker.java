@@ -46,7 +46,7 @@ class Worker {
   }
 
 static Jedis connectToRedis(String host) {
-    Jedis conn = new Jedis("localhost", 6379);
+    Jedis conn = new Jedis(host);
     int retryAttempts = 10;  // Retry limit
     int attempt = 0;
 
@@ -79,7 +79,7 @@ static Jedis connectToRedis(String host) {
 
       Class.forName("org.postgresql.Driver");
       // replace the link to localhost
-      String url = "jdbc:postgresql://localhost:5432/postgres";
+      String url = "jdbc:postgresql://" + host + "/postgres";
 
       while (conn == null) {
         try {
