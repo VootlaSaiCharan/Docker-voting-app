@@ -45,22 +45,32 @@ class Worker {
     }
   }
 
-  static Jedis connectToRedis(String host) {
-    Jedis conn = new Jedis(host);
+static Jedis connectToRedis(String host) {
+    Jedis conn = new Jedis("localhost", 6379);
+    int retryAttempts = 10;  // Retry limit
+    int attempt = 0;
 
-    while (true) {
-      try {
-        conn.keys("*");
-        break;
-      } catch (JedisConnectionException e) {
-        System.err.println("Waiting for redis");
-        sleep(1000);
-      }
+    while (attempt < retryAttempts) {
+        try {
+            // Try a basic ping to check if Redis is responding
+            if ("PONG".equals(conn.ping())) {
+                break;  // Redis is available
+            }
+        } catch (JedisConnectionException e) {
+            attempt++;
+            System.err.println("Waiting for redis... attempt " + attempt + " of " + retryAttempts);
+            sleep(1000);
+        }
+    }
+
+    if (attempt == retryAttempts) {
+        System.err.println("Unable to connect to Redis after " + retryAttempts + " attempts.");
+        System.exit(1);  // Exit the application or handle appropriately
     }
 
     System.err.println("Connected to redis");
     return conn;
-  }
+}
 
   static Connection connectToDB(String host) throws SQLException {
     Connection conn = null;
@@ -68,7 +78,8 @@ class Worker {
     try {
 
       Class.forName("org.postgresql.Driver");
-      String url = "jdbc:postgresql://" + host + "/postgres";
+      // replace the link to localhost
+      String url = "jdbc:postgresql://localhost:5432/postgres";
 
       while (conn == null) {
         try {
