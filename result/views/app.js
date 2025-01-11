@@ -10,7 +10,8 @@ app.controller('statsCtrl', function($scope){
 
   var updateScores = function(){
     socket.on('scores', function (json) {
-       data = JSON.parse(json);
+      console.log(json)
+       let data = JSON.parse(json);
        var a = parseInt(data.a || 0);
        var b = parseInt(data.b || 0);
 

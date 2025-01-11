@@ -1,14 +1,19 @@
 var express = require('express'),
     async = require('async'),
     { Pool } = require('pg'),
+    path = require('path'),
     cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    methodOverride = require('method-override'),
     app = express(),
     server = require('http').Server(app),
     io = require('socket.io')(server);
 
+io.set('transports', ['polling']);
+
 var port = process.env.PORT || 4000;
 
-io.on('connection', function (socket) {
+io.sockets.on('connection', function (socket) {
 
   socket.emit('message', { text : 'Welcome!' });
 
@@ -18,7 +23,7 @@ io.on('connection', function (socket) {
 });
 
 var pool = new Pool({
-  connectionString: 'postgres://postgres:postgres@db/postgres'
+  connectionString: 'postgres://postgres:postgres@localhost/postgres'
 });
 
 async.retry(
@@ -64,7 +69,15 @@ function collectVotesFromResult(result) {
 }
 
 app.use(cookieParser());
-app.use(express.urlencoded());
+app.use(bodyParser());
+app.use(methodOverride('X-HTTP-Method-Override'));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+  next();
+});
+
 app.use(express.static(__dirname + '/views'));
 
 app.get('/', function (req, res) {

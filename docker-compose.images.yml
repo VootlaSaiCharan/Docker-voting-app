@@ -6,7 +6,7 @@
 
 services:
   vote:
-    image: dockersamples/examplevotingapp_vote
+    image: vootlasaicharan/examplevotingapp_vote
     depends_on:
       redis:
         condition: service_healthy 
@@ -17,7 +17,7 @@ services:
       - back-tier
 
   result:
-    image: dockersamples/examplevotingapp_result
+    image: vootlasaicharan/examplevotingapp_result
     depends_on:
       db:
         condition: service_healthy 
@@ -28,7 +28,7 @@ services:
       - back-tier
 
   worker:
-    image: dockersamples/examplevotingapp_worker
+    image: vootlasaicharan/examplevotingapp_worker
     depends_on:
       redis:
         condition: service_healthy 
