@@ -25,6 +25,10 @@ io.sockets.on('connection', function (socket) {
 });
 
 var pool = new Pool({
+  // if we are connecting from docker and kubernetes
+  // connectionString: 'postgres://postgres:postgres@db/postgres'
+
+  // if we are connecting on local machine
   connectionString: 'postgres://postgres:postgres@localhost/postgres'
 });
 
