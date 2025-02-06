@@ -47,10 +47,10 @@ class Worker {
 
 static Jedis connectToRedis(String host) {
   // if we are running in container or kubernetes 
-  // Jedis conn = new Jedis(host);
+  Jedis conn = new Jedis(host);
   
   // if we are running in local machine
-    Jedis conn = new Jedis("localhost", 6379);
+    // Jedis conn = new Jedis("localhost", 6379);
     int retryAttempts = 10;  // Retry limit
     int attempt = 0;
 
@@ -83,10 +83,10 @@ static Jedis connectToRedis(String host) {
 
       Class.forName("org.postgresql.Driver");
       // this linkn for the container and  kubernetes
-      // String url = "jdbc:postgresql://" + host + "/postgres";
+      String url = "jdbc:postgresql://" + host + "/postgres";
       
       // this link for the local machine
-      String url = "jdbc:postgresql://localhost:5432/postgres";
+      // String url = "jdbc:postgresql://localhost:5432/postgres";
 
       while (conn == null) {
         try {

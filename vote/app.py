@@ -19,10 +19,10 @@ app.logger.setLevel(logging.INFO)
 def get_redis():
     if not hasattr(g, 'redis'):
         # this below code is for the containerized environment
-        # g.redis = Redis(host="redis", db=0, socket_timeout=5)
+        g.redis = Redis(host="redis", db=0, socket_timeout=5)
         
         # this below code is for the local host (manual installation)
-        g.redis = Redis(host="127.0.0.1", port=6379, db=0, socket_timeout=5)  # Updated host
+        # g.redis = Redis(host="127.0.0.1", port=6379, db=0, socket_timeout=5)  # Updated host
     return g.redis
 
 @app.route("/", methods=['POST','GET'])
